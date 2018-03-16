@@ -128,7 +128,8 @@ namespace Tfs.BuildNotifications.Web.Nancy.Modules
 
                 try
                 {
-                    var projects = _buildConfigurationService.GetProjects(id, out var connection);
+                    Connection connection;
+                    var projects = _buildConfigurationService.GetProjects(id, out connection);
 
                     var model = new AddProjectViewModel
                     {
@@ -187,8 +188,10 @@ namespace Tfs.BuildNotifications.Web.Nancy.Modules
 
                 try
                 {
+                    Connection connection;
+                    Project project;
                     var buildDefinitions =_buildConfigurationService.GetBuildDefinitions(connectionId, projectId, 
-                        out var connection, out var project);
+                        out connection, out project);
 
                     var model = new AddBuildsViewModel
                     {

@@ -89,7 +89,8 @@ namespace Tfs.BuildNotifications.Core.Services
         public void AddConnection(string tfsServerUrl, string tfsLocation, string userName, string password, 
             string personalAccessToken)
         {
-            ValidateConnection(tfsServerUrl, tfsLocation, userName, password, personalAccessToken, out var deployment);
+            TfsServerDeployment deployment;
+            ValidateConnection(tfsServerUrl, tfsLocation, userName, password, personalAccessToken, out deployment);
 
             var config = GetConfig();
 
@@ -118,8 +119,9 @@ namespace Tfs.BuildNotifications.Core.Services
         {
             var config = GetConfig();
             var connection = config.Connections.First(c => c.Id.ToString() == connectionId);
-                
-            ValidateConnection(tfsServerUrl, tfsLocation, userName, password, personalAccessToken, out var deployment);
+
+            TfsServerDeployment deployment;
+            ValidateConnection(tfsServerUrl, tfsLocation, userName, password, personalAccessToken, out deployment);
 
             connection.Password = EncryptString(password);
             connection.PersonalAccessToken = EncryptString(personalAccessToken);
@@ -142,7 +144,8 @@ namespace Tfs.BuildNotifications.Core.Services
         public void AddProjects(string connectionId, List<Project> projectsSelected)
         {
             var config = GetConfig();
-            var allProjects = GetProjects(connectionId, out var connection);
+            Connection connection;
+            var allProjects = GetProjects(connectionId, out connection);
 
             // Remove any projects that don't exist in this connection.
             projectsSelected.RemoveAll(p => !allProjects.Select(ap => ap.Id).Contains(p.Id));
@@ -169,7 +172,8 @@ namespace Tfs.BuildNotifications.Core.Services
         {
             var config = GetConfig();
 
-            var project = this.GetProject(projectId, connectionId, out var connection);
+            Connection connection;
+            var project = this.GetProject(projectId, connectionId, out connection);
 
             var projectBuildDefinitions = _tfsApiClient.GetBuildDefinitions(connection, project.Name);
 

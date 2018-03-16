@@ -113,7 +113,7 @@ namespace Tfs.BuildNotifications.Core.Clients
             return response.Data;
         }
 
-        private (string UserName, string Password) GetCredentials(Connection connection)
+        private Credentials GetCredentials(Connection connection)
         {
             var basicAuthUserName = "";
             var basicAuthPassword = "";
@@ -128,7 +128,7 @@ namespace Tfs.BuildNotifications.Core.Clients
                 basicAuthPassword = connection.PersonalAccessToken;
             }
 
-            return (basicAuthUserName, basicAuthPassword);
+            return new Credentials { UserName = basicAuthUserName, Password = basicAuthPassword };
         }
 
         private List<Build> ConvertToBuildModel(BuildApiResponseWrapper apiBuildResult)
@@ -155,5 +155,11 @@ namespace Tfs.BuildNotifications.Core.Clients
         }
 
         #endregion
+    }
+
+    internal class Credentials
+    {
+        public string UserName { get; set; }
+        public string Password { get; set; }
     }
 }
